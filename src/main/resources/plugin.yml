@@ -1,0 +1,8 @@
+name: SugarPings
+version: '${project.version}'
+main: dev.tea.sugarpings.SugarPings
+api-version: '1.17'
+prefix: sPings
+authors: [tea_with_sugar]
+description: Notifies the player when they are mentioned in the chat.
+website: https://www.spigotmc.org/members/tea_with_sugar.2007529/
