@@ -1,0 +1,11 @@
+NeedSound: true
+NeedActionBar: true
+RangedChat: false
+Range: 100
+
+Sound:
+  ID: "ENTITY_PLAYER_LEVELUP"
+  Pitch: 2
+  Volume: 25
+
+ActionBar: "&fYou pinged in chat by &e%player%"
