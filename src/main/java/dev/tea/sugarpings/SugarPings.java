@@ -56,8 +56,8 @@ public class SugarPings extends JavaPlugin implements Listener {
         String msg = event.getMessage().toLowerCase();
         for (Player player1 : Bukkit.getOnlinePlayers()) {
 
-            if (rangedChat && event.getPlayer().getWorld() != player1.getWorld()) return;
-            if (rangedChat && !rangedChatCheck(event.getPlayer(), player1)) return;
+            if (rangedChat && event.getPlayer().getWorld() != player1.getWorld()) continue;
+            if (rangedChat && !rangedChatCheck(event.getPlayer(), player1)) continue;
 
             if (msg.contains(player1.getName().toLowerCase())) {
                 String act = format(config.getString("ActionBar"));
