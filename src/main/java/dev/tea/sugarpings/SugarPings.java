@@ -28,7 +28,7 @@ public class SugarPings extends JavaPlugin implements Listener {
         config = getConfig();
         needSound = config.getBoolean("NeedActionBar");
         needAct = config.getBoolean("NeedSound");
-        needAct = config.getBoolean("NeedTitle");
+        needTitle = config.getBoolean("NeedTitle");
         rangedChat = config.getBoolean("RangedChat");
         Bukkit.getPluginManager().registerEvents(this, this);
     }
@@ -64,11 +64,13 @@ public class SugarPings extends JavaPlugin implements Listener {
                 if (needAct) player1.sendActionBar(act);
                 if (needSound) { player1.playSound(player1.getLocation(), Sound.valueOf(config.getString("Sound.ID")), config.getInt("Sound.Volume"), config.getInt("Sound.Pitch")); }
                 if (needTitle) {
-                    String title = config.getString("Title.Title", "&f");
-                    String subtitle = config.getString("Title.SubTitle", "&f");
+                    String title = format(config.getString("Title.Title", "&f"));
+                    String subtitle = format(config.getString("Title.SubTitle", "&f"));
                     int fadein = config.getInt("Title.FadeIn", 20);
                     int stay = config.getInt("Title.Stay", 20);
                     int fadeout = config.getInt("Title.FadeOut", 20);
+                    if (title.contains("%player")) title = title.replace("%player%", event.getPlayer().getName());
+                    if (subtitle.contains("%player")) subtitle = subtitle.replace("%player%", event.getPlayer().getName());
                     player1.sendTitle(title, subtitle, fadein, stay, fadeout);
                 }
             }
