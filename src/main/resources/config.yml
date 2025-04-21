@@ -1,5 +1,6 @@
 NeedSound: true
 NeedActionBar: true
+NeedTitle: true
 RangedChat: false
 Range: 100
 
@@ -9,3 +10,9 @@ Sound:
   Volume: 25
 
 ActionBar: "&fYou pinged in chat by &e%player%"
+Title:
+  Title: "&fYou pinged in chat"
+  SubTitle: "&fby &e%player%"
+  FadeIn: 20
+  Stay: 20
+  FadeOut: 20

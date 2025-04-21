@@ -19,6 +19,7 @@ public class SugarPings extends JavaPlugin implements Listener {
     private FileConfiguration config;
     private boolean needSound;
     private boolean needAct;
+    private boolean needTitle;
     private boolean rangedChat;
 
     @Override
@@ -27,6 +28,7 @@ public class SugarPings extends JavaPlugin implements Listener {
         config = getConfig();
         needSound = config.getBoolean("NeedActionBar");
         needAct = config.getBoolean("NeedSound");
+        needAct = config.getBoolean("NeedTitle");
         rangedChat = config.getBoolean("RangedChat");
         Bukkit.getPluginManager().registerEvents(this, this);
     }
@@ -45,10 +47,7 @@ public class SugarPings extends JavaPlugin implements Listener {
     }
 
     private boolean rangedChatCheck (Player player1, Player player2) {
-        Location loc1 = player1.getLocation();
-        Location loc2 = player2.getLocation();
-        if (loc1.distance(loc2) >= config.getInt("Range")) return false;
-        return true;
+        return player1.getLocation().distance(player2.getLocation()) >= config.getInt("Range");
     }
 
     @EventHandler
@@ -64,6 +63,14 @@ public class SugarPings extends JavaPlugin implements Listener {
                 if (act.contains("%player%")) act = act.replace("%player%", event.getPlayer().getName());
                 if (needAct) player1.sendActionBar(act);
                 if (needSound) { player1.playSound(player1.getLocation(), Sound.valueOf(config.getString("Sound.ID")), config.getInt("Sound.Volume"), config.getInt("Sound.Pitch")); }
+                if (needTitle) {
+                    String title = config.getString("Title.Title", "&f");
+                    String subtitle = config.getString("Title.SubTitle", "&f");
+                    int fadein = config.getInt("Title.FadeIn", 20);
+                    int stay = config.getInt("Title.Stay", 20);
+                    int fadeout = config.getInt("Title.FadeOut", 20);
+                    player1.sendTitle(title, subtitle, fadein, stay, fadeout);
+                }
             }
         }
     }
