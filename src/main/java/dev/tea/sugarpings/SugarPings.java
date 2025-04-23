@@ -26,8 +26,8 @@ public class SugarPings extends JavaPlugin implements Listener {
     public void onEnable() {
         this.saveDefaultConfig();
         config = getConfig();
-        needSound = config.getBoolean("NeedActionBar");
-        needAct = config.getBoolean("NeedSound");
+        needSound = config.getBoolean("NeedSound");
+        needAct = config.getBoolean("NeedActionBar");
         needTitle = config.getBoolean("NeedTitle");
         rangedChat = config.getBoolean("RangedChat");
         Bukkit.getPluginManager().registerEvents(this, this);
