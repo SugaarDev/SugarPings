@@ -1,16 +1,18 @@
 package dev.tea.sugarpings;
 
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.time.Duration;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,8 +28,8 @@ public class SugarPings extends JavaPlugin implements Listener {
     public void onEnable() {
         this.saveDefaultConfig();
         config = getConfig();
-        needSound = config.getBoolean("NeedActionBar");
-        needAct = config.getBoolean("NeedSound");
+        needSound = config.getBoolean("NeedSound");
+        needAct = config.getBoolean("NeedActionBar");
         needTitle = config.getBoolean("NeedTitle");
         rangedChat = config.getBoolean("RangedChat");
         Bukkit.getPluginManager().registerEvents(this, this);
@@ -51,17 +53,22 @@ public class SugarPings extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    public void onChat (PlayerChatEvent event) {
-        String msg = event.getMessage().toLowerCase();
+    public void onChat (io.papermc.paper.event.player.AsyncChatEvent event) {
+        Component msg = event.message();
         for (Player player1 : Bukkit.getOnlinePlayers()) {
 
             if (rangedChat && event.getPlayer().getWorld() != player1.getWorld()) continue;
             if (rangedChat && !rangedChatCheck(event.getPlayer(), player1)) continue;
 
-            if (msg.contains(player1.getName().toLowerCase())) {
+            if (msg.contains(Component.text(player1.getName().toLowerCase()))) continue; {
+                Audience audience = Audience.audience(player1);
                 String act = format(config.getString("ActionBar"));
                 if (act.contains("%player%")) act = act.replace("%player%", event.getPlayer().getName());
-                if (needAct) player1.sendActionBar(act);
+                if (needAct) {
+                    audience.sendActionBar(
+                            Component.text(act)
+                    );
+                }
                 if (needSound) { player1.playSound(player1.getLocation(), Sound.valueOf(config.getString("Sound.ID")), config.getInt("Sound.Volume"), config.getInt("Sound.Pitch")); }
                 if (needTitle) {
                     String title = format(config.getString("Title.Title", "&f"));
@@ -71,7 +78,9 @@ public class SugarPings extends JavaPlugin implements Listener {
                     int fadeout = config.getInt("Title.FadeOut", 20);
                     if (title.contains("%player")) title = title.replace("%player%", event.getPlayer().getName());
                     if (subtitle.contains("%player")) subtitle = subtitle.replace("%player%", event.getPlayer().getName());
-                    player1.sendTitle(title, subtitle, fadein, stay, fadeout);
+                    audience.showTitle(Title.title(Component.text(title), Component.text(subtitle), Title.Times.of(
+                            Duration.ofSeconds((long) fadein/20), Duration.ofSeconds((long) stay/20), Duration.ofSeconds((long) fadeout/20)
+                    )));
                 }
             }
         }
